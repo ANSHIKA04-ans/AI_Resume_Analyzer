@@ -101,3 +101,5 @@ Add screenshots here after running the application.
 Anshika
 
 GitHub: https://github.com/ANSHIKA04-ans
+## 🌐 Live Demo
+https://ai-resume-analyzer-01z.streamlit.app/
