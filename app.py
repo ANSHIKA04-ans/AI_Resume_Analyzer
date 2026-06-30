@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from modules.pdf_parser import extract_text_from_pdf
 from modules.skill_match import extract_skills
 from modules.ats_score import calculate_ats_score
+from modules.report_generator import generate_report
 
 # ---------------- Page Config ----------------
 st.set_page_config(
@@ -141,22 +142,44 @@ if st.button("🔍 Analyze Resume"):
 
         with col4:
             st.metric("Missing Skills", missing_count)
-            # ---------------- Skill Match Chart ----------------
+           
+                   # ---------------- Skill Match Chart ----------------
 
-st.subheader("📊 Skill Match Visualization")
+        st.subheader("📊 Skill Match Visualization")
 
-labels = ["Matched Skills", "Missing Skills"]
-sizes = [matched_count, missing_count]
+        labels = ["Matched Skills", "Missing Skills"]
+        sizes = [matched_count, missing_count]
 
-if matched_count == 0 and missing_count == 0:
-    st.info("No skills available to visualize.")
-else:
-    fig, ax = plt.subplots(figsize=(5, 5))
-    ax.pie(
-        sizes,
-        labels=labels,
-        autopct="%1.1f%%",
-        startangle=90
-    )
-    ax.axis("equal")
-    st.pyplot(fig)
+        if matched_count == 0 and missing_count == 0:
+            st.info("No skills available to visualize.")
+        else:
+            fig, ax = plt.subplots(figsize=(5, 5))
+            ax.pie(
+                sizes,
+                labels=labels,
+                autopct="%1.1f%%",
+                startangle=90
+            )
+            ax.axis("equal")
+            st.pyplot(fig)
+
+        # ---------------- PDF Report ----------------
+
+        st.subheader("📄 Download Analysis Report")
+
+        report_file = "Resume_Analysis_Report.pdf"
+
+        generate_report(
+            report_file,
+            ats_score,
+            matched_skills,
+            missing_skills
+        )
+
+        with open(report_file, "rb") as pdf_file:
+            st.download_button(
+                label="📥 Download PDF Report",
+                data=pdf_file,
+                file_name="Resume_Analysis_Report.pdf",
+                mime="application/pdf"
+            )
